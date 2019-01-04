@@ -11,8 +11,8 @@ class TornadoMqttClient(object):
         self.ioloop = ioloop or IOLoop.current()
 
         self._client =  mqtt.Client(client_id=clientid or self._genid(), clean_session=clean_session)
-        if username!=None:
-            self._client.username_pw_set(self._username, self._password)   
+        if username is not None:
+            self._client.username_pw_set(username, password)   
 
         self._client.on_connect = self.on_mqtt_connect
         self._client.on_disconnect = self.on_mqtt_disconnect
@@ -78,26 +78,13 @@ class TornadoMqttClient(object):
         self.ioloop.update_handler(sock, IOLoop.READ)
         pass
 
-    def _start_ioloop(self):
-        # not used now to remove
-        self._sock = self._client.socket()
-        self.ioloop.add_handler(self._sock.fileno(), self._handle_read, IOLoop.READ | IOLoop.WRITE | IOLoop.ERROR)
-        self.ioloop.add_handler(self._client._sockpairR.fileno(), self._handle_write, IOLoop.READ | IOLoop.ERROR)
-        
-        self._misc_loop.start()
-        pass
-
     def _handle_misc(self):
         self._client.loop_misc()
-
-    def _handle_write(self, fd, events):
-        # not used now to remove
-        if events & IOLoop.READ:
-            self._client._sockpairR.recv(1)
-            rc = self._client.loop_write() 
+        pass
 
     def _handle_read(self, fd, events):
         if events & IOLoop.READ:
             rc = self._client.loop_read()
         if events & IOLoop.WRITE:
             rc = self._client.loop_write()
+        pass
