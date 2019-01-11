@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import setuptools
-import paho_mqtt as module                  
+import paho_async as module
 
 setuptools.setup(
     name=module.name,
